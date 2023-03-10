@@ -1,22 +1,29 @@
 import React, { useEffect, useRef } from 'react'
 
 function Card(props) {
-	// 이미지 래퍼런스를 가져온다.
+	// 1. 이미지 래퍼런스를 가져온다.
 	const imgRef = useRef(null);
 
-	// userEffect 를 사요하지 않으면 랜더링할때마다 인스턴스가 생성되고, 
+	// 1. userEffect 를 사요하지 않으면 랜더링할때마다 인스턴스가 생성되고, 
 	// 대상요소를 관찰하게 되면서 대상요소에 여러개의 콜백이 실행된다.
 	// 따라서 이와같은 중복을 방지하고자 userEffect에서 인스턴스를 생성해야 한다.
 	useEffect(() => {
 		const options = {}
 		const callback = (entries, observer) => {
-			console.log('Entries',entries);
+			// 2. 화면에 이미지가 보이는 순간, 콜백이 실행되는 순간에 이미지를 로드한다.
+			entries.forEach(entry => {
+				if(entry.isIntersecting) {
+					console.log('is intersecting',entry.target.src);
+					entry.target.src = entry.target.src;
+					observer.unobserve(entry.target)
+				}
+			});
 		}
 
 		const observer = new IntersectionObserver(callback, options);
 		observer.observe(imgRef.current)
 
-		// observer.disconnect 함수를 호출함으로써 리소스가 낭비되지 않도록 한다.
+		// 1. observer.disconnect 함수를 호출함으로써 리소스가 낭비되지 않도록 한다.
 		return () => observer.disconnect()
 
 	}, [])
