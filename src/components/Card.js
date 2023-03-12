@@ -13,8 +13,8 @@ function Card(props) {
 			// 2. 화면에 이미지가 보이는 순간, 콜백이 실행되는 순간에 이미지를 로드한다.
 			entries.forEach(entry => {
 				if(entry.isIntersecting) {
-					console.log('is intersecting',entry.target.src);
-					entry.target.src = entry.target.src;
+					console.log('is intersecting',entry.target.dataset.src);
+					entry.target.src = entry.target.dataset.src;
 					observer.unobserve(entry.target)
 				}
 			});
@@ -30,7 +30,7 @@ function Card(props) {
 
 	return (
 		<div className="Card text-center">
-			<img src={props.image} ref={imgRef} />
+			<img data-src={props.image} ref={imgRef} />
 			<div className="p-5 font-semibold text-gray-700 text-xl md:text-lg lg:text-xl keep-all">
 				{props.children}
 			</div>
